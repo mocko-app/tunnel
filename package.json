@@ -1,0 +1,40 @@
+{
+  "name": "@mocko/tunnel",
+  "version": "0.1.0",
+  "description": "Tunnel local ports to Mocko, make them accessible from anywhere securely",
+  "main": "bin/main.js",
+  "bin": {
+    "mocko-tunnel": "bin/main.js",
+    "mt": "bin/main.js"
+  },
+  "scripts": {
+    "start": "node bin/main",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mocko-app/tunnel.git"
+  },
+  "keywords": [
+    "mock",
+    "stub",
+    "templates",
+    "local",
+    "tunnel",
+    "ngrok"
+  ],
+  "author": "Mocko <contact@mocko.dev>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/mocko-app/tunnel/issues"
+  },
+  "homepage": "https://github.com/mocko-app/tunnel#readme",
+  "dependencies": {
+    "@hapi/bossy": "^6.0.1",
+    "axios": "^1.4.0",
+    "debug": "^4.3.4",
+    "inquirer": "^9.2.7",
+    "ora": "^6.3.1",
+    "semver": "^7.5.3"
+  }
+}
