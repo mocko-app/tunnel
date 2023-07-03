@@ -1,3 +1,4 @@
+require('colors');
 const axios = require('axios');
 const debug = require('debug')('mocko:tunnel:tunnel');
 
@@ -5,23 +6,25 @@ let lastId = '0';
 
 async function tunnel(port, token) {
     debug('connecting to stream');
-    // TODO connect
-    console.log(`Tunnelling requests to local port ${port}`)
+    const { data } = await axios.post(`https://dev-mocko.free.mockoapp.net/tunnels/${token}/subscribers`)
+        .catch(exitWithError);
 
-    fetchPage(token);
+    lastId = data.start;
+    fetchPage(data.subscriberId);
+    console.log(`${'✔'.green} Forwarding requests from ${data.url} to local port ${port}`);
 }
 
-async function fetchPage(token) {
+async function fetchPage(subscriberId) {
     debug('fetching request page');
-    const { data } = await axios.get(`https://api.codetunnel.net/stream/v1/subscribers/${token}/messages?wait=true&after=${lastId}`)
+    const { data } = await axios.get(`https://api.codetunnel.net/stream/v1/subscribers/${subscriberId}/messages?wait=true&after=${lastId}`)
         .catch(exitWithError);
 
     data.forEach(([id, req]) => {
         lastId = id;
-        sendRequest(token, id, req);
+        sendRequest(subscriberId, id, req);
     });
 
-    setTimeout(() => fetchPage(token), 100);
+    setTimeout(() => fetchPage(subscriberId), 100);
 }
 
 async function sendRequest(token, id, req) {
