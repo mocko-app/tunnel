@@ -12,7 +12,7 @@ const { tunnel } = require('./tunnel');
 
 const debug = require('debug')('mocko:tunnel:main');
 
-const usage = Bossy.usage(definition, 'mt <port>\nExample: mt 8080');
+const usage = Bossy.usage(definition, 'mt <port> [options]\nExample: mt 8080');
 
 const UUID_v4 = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 
@@ -33,9 +33,12 @@ async function run() {
     debug('validating args');
     validateArgs(args);
     const port = parseInt(args._[0]);
+    let token = args.token;
 
-    debug('prompting token');
-    const token = await promptToken();
+    if(!token) {
+        debug('prompting token');
+        token = await promptToken();
+    }
 
     debug('showing connecting spinner')
     const { default: ora } = await import('ora');
@@ -69,7 +72,7 @@ function buildArgs() {
     return args;
 }
 
-function validateArgs({ _ }) {
+function validateArgs({ token, _ }) {
     const port = _[0];
 
     if(!port) {
@@ -83,6 +86,14 @@ function validateArgs({ _ }) {
 
     if(portNumber < 1 || portNumber > 49151) {
         exitWithError('Port must be between 1 and 49151');
+    }
+
+    if(!token) {
+        return;
+    }
+
+    if(!UUID_v4.test(token)) {
+        exitWithError('Token must be a valid UUID, you can find it in your project settings on https://app.mocko.dev/project');
     }
 }
 
@@ -100,7 +111,6 @@ async function promptToken() {
 
 function exitWithError(message) {
     console.error(message);
-    console.log(usage);
     process.exit(1);
 }
 

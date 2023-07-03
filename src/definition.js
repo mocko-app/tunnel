@@ -9,4 +9,8 @@ module.exports.definition = {
         alias: 'version',
         type: 'help',
     },
+    t: {
+        description: 'Sets the tunnel token. If not provided, the token will be prompted',
+        alias: 'token',
+    },
 };
