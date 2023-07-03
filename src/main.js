@@ -40,23 +40,8 @@ async function run() {
         token = await promptToken();
     }
 
-    debug('showing connecting spinner')
-    const { default: ora } = await import('ora');
-
-    const spinner = ora({
-        color: 'green',
-        text: 'Connecting to Mocko',
-    }).start();
-
     debug('starting tunnel');
-    const url = await tunnel(port, token);
-
-    debug('showing success spinner');
-    spinner.stop();
-    ora({
-        text: `Tunnelling requests from ${url} to local port ${port}`, // TODO
-        spinner: 'bouncingBar',
-    }).start();
+    await tunnel(port, token);
 }
 
 function buildArgs() {
