@@ -78,7 +78,7 @@ function validateArgs({ token, _ }) {
     }
 
     if(!UUID_v4.test(token)) {
-        exitWithError('Token must be a valid UUID, you can find it in your project settings: https://app.mocko.dev/project');
+        exitWithError('Token must be a valid UUID, you can find it in your project settings: https://app.mocko.dev/tunnels');
     }
 }
 
@@ -88,7 +88,7 @@ async function promptToken() {
         type: 'input',
         name: 'token',
         message: 'Provide your tunnel token, found in your project settings:',
-        validate: tok => UUID_v4.test(tok) || 'Token must be a valid UUID, you can find it in your project settings: https://app.mocko.dev/project',
+        validate: tok => UUID_v4.test(tok) || 'Token must be a valid UUID, you can find it in your project settings: https://app.mocko.dev/tunnels',
     }]);
 
     return token;

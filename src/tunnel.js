@@ -41,12 +41,12 @@ async function sendRequest(token, id, req) {
 }
 
 function exitWithError(error) {
-    let message = error?.response?.data?.message ?? error?.message ?? error;
+    let message = 'Error: ' + (error?.response?.data?.message ?? error?.message ?? error);
     if(error?.response?.data?.statusCode === 404) {
-        message = 'Invalid or expired token, you can find it in your project settings: https://app.mocko.dev/project';
+        message = 'Invalid or expired token, you can find it in your project settings: https://app.mocko.dev/tunnels';
     }
     if(error?.response?.data?.statusCode === 409) {
-        message = 'Your token expired, get a new one in your project settings: https://app.mocko.dev/project';
+        message = 'Your token expired, get a new one in your project settings: https://app.mocko.dev/tunnels';
     }
 
     console.error(message);
