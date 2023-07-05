@@ -13,4 +13,10 @@ module.exports.definition = {
         description: 'Sets the tunnel token. If not provided, the token will be prompted',
         alias: 'token',
     },
+    d: {
+        description: 'Runs in debug mode',
+        alias: 'debug',
+        type: 'boolean',
+        default: false,
+    },
 };

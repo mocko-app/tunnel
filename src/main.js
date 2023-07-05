@@ -10,7 +10,8 @@ const pkg = require('../package.json');
 const { definition } = require('./definition');
 const { tunnel } = require('./tunnel');
 
-const debug = require('debug')('mocko:tunnel:main');
+const Debug = require('debug');
+const debug = Debug('mocko:tunnel:main');
 
 const usage = Bossy.usage(definition, 'mt <port> [options]\nExample: mt 8080');
 
@@ -28,6 +29,10 @@ async function run() {
     if(args.help || !args._ || args._.length !== 1) {
         console.log(usage);
         process.exit(0);
+    }
+
+    if(args.debug) {
+        Debug.enable('mocko*');
     }
 
     debug('validating args');
