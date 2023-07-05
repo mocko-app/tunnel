@@ -26,26 +26,45 @@ async function fetchPage(subscriberId, port) {
 
     data.forEach(([id, req]) => {
         page = id;
-        sendRequest(subscriberId, id, req, port);
+        // No await, requests are sent in the background without holding the fetchPage loop
+        proxyRequest(subscriberId, id, req, port);
     });
 }
 
-async function sendRequest(token, id, message, port) {
-    debug(`sending request`);
+async function proxyRequest(token, id, message, port) {
     const req = JSON.parse(message);
+    debug(`sending request ${req.method.toUpperCase()} ${req.path}`);
 
-    console.log(`${req.method.toUpperCase()} ${req.path}`);
-    const res = await axios({
+    const data = await sendRequest(req, port);
+    await publishResponse(id, token, data);
+}
+
+async function sendRequest(req, port) {
+    try {
+        const res = await sendAxiosRequest(req, port);
+        debug(`publishing ${res.status} response of ${req.method} ${req.path}`);
+        console.log(`${req.method.toUpperCase()} ${req.path}\t${res.status}`);
+        return toTunnelResponse(res.status, res.headers, res.data);
+    } catch(e) {
+        debug(`publishing error response of ${req.method} ${req.path}`);
+        console.log(`${req.method.toUpperCase()} ${req.path}\tFailed with error: ${e.message}`);
+        return toTunnelError('Failed to send request to local port, check the mocko-tunnel CLI logs for more information');
+    }
+}
+
+async function sendAxiosRequest(req, port) {
+    return await axios({
         method: req.method,
         url: `http://localhost:${port}${req.path}`,
         data: Buffer.from(req.body, 'base64'),
         headers: req.headers,
         validateStatus: () => true,
         responseType: 'arraybuffer',
+        timeout: 10000,
     });
-    const data = toTunnelResponse(res.status, res.headers, res.data);
+}
 
-    debug(`publishing ${res.status} response of ${req.method} ${req.path}`);
+async function publishResponse(id, token, data) {
     try {
         if(data.length > 8192) {
             throw new Error('Response is too large to be tunneled back');

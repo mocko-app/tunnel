@@ -23,7 +23,6 @@ const exitWithError = (tag) => (error) => {
 function toTunnelResponse(status, headers, data) {
     const dataBuffer = typeof data === 'string' ? Buffer.from(data) : data;
     const body = dataBuffer.toString('base64');
-    console.log(body);
 
     return JSON.stringify({
         status, body,
