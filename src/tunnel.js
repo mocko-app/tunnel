@@ -54,9 +54,24 @@ async function sendRequest(token, id, message, port) {
 
     debug('publishing response');
     try {
+        if(data.length > 8192) {
+            throw new Error('Response is too large to be tunneled back');
+        }
         await axios.post(`https://api.codetunnel.net/stream-response/v1/subscribers/${token}/responses`, { id, data });
     } catch(e) {
+        const badGateway = JSON.stringify({
+            status: 502,
+            headers: { 'Content-Type': 'application/json' },
+            body: Buffer.from(JSON.stringify({
+                statusCode: 502,
+                error: 'Bad Gateway',
+                message: 'Failed to tunnel response back, check the mocko-tunnel CLI logs for more information',
+            })).toString('base64'),
+        });
+
         console.warn(`Failed to publish response: ${e?.response?.data?.message || e?.message || e}`);
+        await axios.post(`https://api.codetunnel.net/stream-response/v1/subscribers/${token}/responses`, { id, data: badGateway })
+            .catch(() => {});
     }
 }
 
