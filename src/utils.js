@@ -1,18 +1,25 @@
+const pkg = require('../package.json');
+
+const debug = require('debug')('mocko:tunnel:utils');
+
 const REMOVE_HEADERS = new Set();
 REMOVE_HEADERS.add('transfer-encoding');
 REMOVE_HEADERS.add('accept-encoding');
 REMOVE_HEADERS.add('content-length');
 REMOVE_HEADERS.add('connection');
 
+const version = `mocko-tunnel/${pkg.version} NodeJS/${process.version} v8/${process.versions.v8} openssl/${process.versions.openssl} ${process.platform}/${process.arch}`;
 const noop = () => { };
 const sleep = t => new Promise(r => setTimeout(r, t));
 
 const exitWithError = (tag) => (error) => {
     let message = tag + (error?.response?.data?.message ?? error?.message ?? error);
-    if(error?.response?.data?.statusCode === 404) {
+    debug(message);
+    const status = error?.response?.data?.statusCode;
+    if(status === 404 || status === 403) {
         message = 'Invalid or expired token, you can find it in your project settings: https://app.mocko.dev/tunnels';
     }
-    if(error?.response?.data?.statusCode === 409) {
+    if(status === 409) {
         message = 'Your token expired, get a new one in your project settings: https://app.mocko.dev/tunnels';
     }
 
@@ -46,4 +53,4 @@ function sanitizeHeaders(headers) {
     return Object.fromEntries(entries);
 }
 
-module.exports = { toTunnelResponse, toTunnelError, exitWithError, sleep, noop };
+module.exports = { toTunnelResponse, toTunnelError, exitWithError, sleep, noop, version };

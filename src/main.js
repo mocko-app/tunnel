@@ -6,9 +6,9 @@ if(!semver.satisfies(process.version, '>=14')) {
 
 const Bossy = require('@hapi/bossy');
 
-const pkg = require('../package.json');
 const { definition } = require('./definition');
 const { tunnel } = require('./tunnel');
+const { version } = require('./utils');
 
 const Debug = require('debug');
 const debug = Debug('mocko:tunnel:main');
@@ -22,7 +22,7 @@ async function run() {
     const args = buildArgs();
 
     if(args.version) {
-        console.log(`mocko-tunnel/${pkg.version} NodeJS/${process.version} v8/${process.versions.v8} openssl/${process.versions.openssl} ${process.platform}/${process.arch}`);
+        console.log(version);
         process.exit(0);
     }
 
