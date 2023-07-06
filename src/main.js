@@ -5,15 +5,17 @@ if(!semver.satisfies(process.version, '>=14')) {
 }
 
 const Bossy = require('@hapi/bossy');
+const Debug = require('debug');
 
+const pkg = require('../package.json');
 const { definition } = require('./definition');
 const { tunnel } = require('./tunnel');
 const { version } = require('./utils');
 
-const Debug = require('debug');
 const debug = Debug('mocko:tunnel:main');
-
 const usage = Bossy.usage(definition, 'mt <port> [options]\nExample: mt 8080');
+import('update-notifier')
+    .then(u => u.default({ pkg }).notify());
 
 const UUID_v4 = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 
