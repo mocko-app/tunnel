@@ -94,8 +94,8 @@ async function promptToken() {
     const { token } = await inquirer.prompt([{
         type: 'input',
         name: 'token',
-        message: 'Provide your tunnel token, found in your project settings:',
-        validate: tok => UUID_v4.test(tok) || 'Token must be a valid UUID, you can find it in your project settings: https://app.mocko.dev/tunnels',
+        message: 'Provide your Local Tunnel token, found in your project dashboard:',
+        validate: tok => UUID_v4.test(tok) || 'Token must be a valid UUID, you can find it in your project dashboard: https://app.mocko.dev/tunnels',
     }]);
 
     return token;
