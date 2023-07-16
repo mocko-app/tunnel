@@ -39,7 +39,7 @@ Options:
 
 ## Usage
 
-Mocko Tunnel can be used in the terminal either as `mocko-tunnel` or `mt`. Choose which port will be tunneled to Mocko (example with `8080`) and run:
+Mocko Tunnel can be used in the terminal either as `mocko-tunnel` or `mlt`. Choose which port will be tunneled to Mocko (example with `8080`) and run:
 ```sh
 mocko-tunnel 8080
 ```

@@ -5,7 +5,7 @@
   "main": "bin/main.js",
   "bin": {
     "mocko-tunnel": "bin/main.js",
-    "mt": "bin/main.js"
+    "mlt": "bin/main.js"
   },
   "scripts": {
     "start": "node bin/main",
