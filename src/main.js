@@ -13,7 +13,7 @@ const { tunnel } = require('./tunnel');
 const { version } = require('./utils');
 
 const debug = Debug('mocko:tunnel:main');
-const usage = Bossy.usage(definition, 'mt <port> [options]\nExample: mt 8080');
+const usage = Bossy.usage(definition, 'mocko-tunnel <port> [options]\nExamples:\n  mocko-tunnel 8080\n  mocko-tunnel 8080 --token 00000000-0000-0000-0000-000000000000');
 import('update-notifier')
     .then(u => u.default({ pkg }).notify());
 
