@@ -2,7 +2,7 @@ require('colors');
 const axios = require('axios');
 const {
     exitWithError, sleep, toTunnelResponse,
-    toTunnelError, noop, version,
+    toTunnelError, noop, version, logRequest,
 } = require('./utils');
 const debug = require('debug')('mocko:tunnel:tunnel');
 
@@ -51,11 +51,11 @@ async function sendRequest(req, port) {
         if(data.length > 8192) {
             throw new Error(`Response is too large (${data.length}/8192) to be tunneled back.`);
         }
-        console.log(`${req.method.toUpperCase()} ${req.path}\t${res.status}`);
+        logRequest(req.method, req.path, res.status);
         return data;
     } catch(e) {
         debug(`publishing error response of ${req.method} ${req.path}`);
-        console.log(`${req.method.toUpperCase()} ${req.path}\tFailed with error: ${e.message}`);
+        logRequest(req.method, req.path, `Failed with error: ${e.message}`);
         return toTunnelError('Failed to send request to local port, check the mocko-tunnel CLI logs for more information');
     }
 }
@@ -77,7 +77,7 @@ async function publishResponse(id, token, data) {
         await axios.post(`https://api.codetunnel.net/stream-response/v1/subscribers/${token}/responses`, { id, data });
     } catch(e) {
         const badGateway = toTunnelError('Failed to tunnel response back, check the mocko-tunnel CLI logs for more information')
-        console.warn(`Failed to publish previous response: ${e?.response?.data?.message || e?.message || e}`);
+        console.log(`${'!!!'.bold.yellow} Failed to publish previous response: ${e?.response?.data?.message || e?.message || e}`);
         await axios.post(`https://api.codetunnel.net/stream-response/v1/subscribers/${token}/responses`, { id, data: badGateway })
             .catch(noop);
     }

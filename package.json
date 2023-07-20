@@ -31,6 +31,7 @@
   "homepage": "https://github.com/mocko-app/tunnel#readme",
   "dependencies": {
     "@hapi/bossy": "^6.0.1",
+    "@mocko/logger": "^2.1.1",
     "axios": "^1.4.0",
     "colors": "^1.4.0",
     "debug": "^4.3.4",
